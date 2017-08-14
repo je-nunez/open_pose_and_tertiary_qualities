@@ -19,3 +19,7 @@ The published article by its authors is at:
 
 This project is using this library for tertiary artistic qualities, mainly simplification and remotion of qualities in the real-time videos as to get an abstract artistic form.
 
+# Examples
+
+The first example is from a scene of the movie ["Back Stage", starring Fatty Arbuckle and Buster Keaton (1919)](https://en.wikipedia.org/wiki/Back_Stage_(1919_film)), when the dancer Jack Coogan enters into the theater and Buster Keaton, Al St. John, and Roscoe Arbuckle meet him. The scene is at [https://www.youtube.com/watch?v=tYL0VjaCAUY](https://www.youtube.com/watch?v=tYL0VjaCAUY). The result of the using Open-Pose to find Tertiary artistic qualities is at [result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi](result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi) in this repository.
+
