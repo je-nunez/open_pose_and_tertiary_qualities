@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# This script requires FFMPEG and ImageMagick installed. Open-Pose is
-# expected to have been compiled under $HOME/openpose/. (Otherwise
-# change the paths below.)
+# This script requires FFMPEG and ImageMagick installed and their respective
+# programs be in the PATH. Open-Pose is expected to have been compiled under
+# $HOME/openpose/ with its default installation script
+# "install_caffe_and_openpose_if_cuda8.sh". (Otherwise change the paths below
+# in this script, including the one referred in LD_LIBRARY_PATH below to
+# where Caffe libcaffe.so is located.)
 
 # First: generate input images from film:
 # the Open-Pose library does have an excellent support to read input movies in
@@ -13,41 +16,81 @@
 # in the "extras/" subdirectory in this project how the frames of the
 # side-by-side comparison are.
 
-input_movie=./Buster_Keaton_The_Eccentric_Dancer.mkv
-mkdir $HOME/op_input_imgs    # create the directory (any name) with input frames
-ffmpeg -i "$input_movie" -r 24 -vf scale=1280x720  $HOME/input_imgs/original_input_%06d.png
+input_movie=Buster_Keaton_The_Eccentric_Dancer.mkv
+music_mp3=music.mp3
+rate_sampling=24
 
-# Call the Open-Pose wrapper "openpose.bin". We suppose that OpenPose has been
-# compiled under the tree $HOME/openpose/ using its script
-# "install_caffe_and_openpose_if_cuda8.sh"
+if [[ ! -f "$input_movie" || ! -f "$music_mp3" ]]; then
+  echo -e "Please, check that\n    $input_movie\nand\n    $music_mp3\nexist" \
+          "in current directory." >& 2
+  exit 1
+fi
+
+BASE_WORK_DIR=$HOME/tmp.$$             # subdirectory that will hold images
+dir_input=op_input_imgs
+mkdir -p $BASE_WORK_DIR/$dir_input     # create the directory with input frames
+ffmpeg -i "$input_movie" -r $rate_sampling -vf scale=1280x720 \
+       $BASE_WORK_DIR/$dir_input/original_input_%06d.png
+
+# Call the Open-Pose wrapper "openpose.bin".
 # The parameter "--disable_blending" is important so that the OpenPose wrapper
 # generates only the multi-point wire image.
 # More options command-line options of the Open-Pose wrapper "openpose.bin" at:
 # https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/demo_overview.md#most-important-configuration-flags
 
+open_pose_wrapper=$HOME/openpose/.build_release/examples/openpose/openpose.bin
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/openpose/3rdparty/caffe/distribute/lib/
 export LD_LIBRARY_PATH
 
-$HOME/openpose/.build_release/examples/openpose/openpose.bin \
+if [[ ! -x "$open_pose_wrapper" ]]; then
+  echo "OpenPose doesn't seem to have been compiled under $HOME/openpose/\n" \
+       "Please change the variable 'open_pose_wrapper' to point where " \
+       "the 'openpose.bin' executable file is found." >& 2
+  exit 2
+fi
+
+dir_open_pose_rendered_imgs=op_rendered_imgs
+mkdir -p $BASE_WORK_DIR/$dir_open_pose_rendered_imgs  # We ask OpenPose to
+                                        # write the wire imgs in this directory
+
+echo "--- Calling the OpenPose wrapper to find the human wire models ..."
+
+"$open_pose_wrapper" \
      -render_pose 1 \
-     -write_images /home/ubuntu/tmp/ \
-     -image_dir /home/ubuntu/input_imgs/ \
+     -image_dir $BASE_WORK_DIR/$dir_input \
+     -write_images $BASE_WORK_DIR/$dir_open_pose_rendered_imgs \
      -no_display \
      -alpha_pose 0 \
-     --disable_blending
+     -disable_blending
 
 # montage the result (multi-point wire model) to the left with the original
 # frames of the movie to the right using ImageMagick's "montage" program.
 
-for pre_deep_pose in input_imgs/original_input_0*.png; do
-    post_deep_pose=$( sed 's#input_imgs/#tmp/#; s#.png#_rendered.png#' <<< "$pre_deep_pose" )
-    result=$( sed 's#input_imgs/#combined_output/#; s#original_input_#result_#' <<< "$pre_deep_pose" )
-    montage "$post_deep_pose" "$pre_deep_pose" -geometry +1+1  "$result"
+echo "--- Using ImageMagick to montage movie frames with human wire models ..."
+
+dir_tertiary_cmp=result_tertiary_cmp
+mkdir -p $BASE_WORK_DIR/$dir_tertiary_cmp
+
+for pre_open_pose in $BASE_WORK_DIR/$dir_input/original_input_0*.png; do
+    post_open_pose=$( sed -e "s#/$dir_input/#/$dir_open_pose_rendered_imgs/#" \
+                          -e 's#\.png$#_rendered.png#' <<< "$pre_open_pose" )
+    result=$( sed -e "s#/$dir_input/#/$dir_tertiary_cmp/#" \
+                  -e 's#/original_input_#/result_#' <<< "$pre_open_pose" )
+    montage "$post_open_pose" "$pre_open_pose" -geometry +1+1  "$result"
 done
 
-# finally: generate movie
+# finally: generate movie comparing for tertiary properties
 
-rate=24
+echo "--- Generating final movie 'result_side_by_side.avi' ..."
+cp "$music_mp3" $BASE_WORK_DIR/$dir_tertiary_cmp/
+cd $BASE_WORK_DIR/$dir_tertiary_cmp
+if [[ "$?" -ne "0" ]]; then
+  echo "ERROR: couldn't chdir to $BASE_WORK_DIR/$dir_tertiary_cmp/" >&2
+  exit 3
+fi
 
-mencoder mf://result_0*.png -mf fps=${rate}:type=png -ovc x264 -x264encopts bitrate=1200:threads=2 -o result_side_by_side.avi  -oac copy -audiofile music.mp3
+mencoder -quiet mf://result_*.png -mf fps=${rate_sampling}:type=png \
+         -ovc x264 -x264encopts bitrate=1200:threads=2 \
+         -o result_side_by_side.avi -oac copy -audiofile "$music_mp3"
 
+echo "Tertiary-comparison movie generated at `pwd`/result_side_by_side.avi"

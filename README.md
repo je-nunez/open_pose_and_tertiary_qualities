@@ -8,9 +8,11 @@ This project is a *work in progress*. The implementation is *incomplete* and sub
 
 Open-Pose is a C++ library for real-time Multi-Person Keypoint Detection developed at the Carnegie Mellon University. As mentioned at its project repository [https://github.com/CMU-Perceptual-Computing-Lab/openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose):
 
-OpenPose represents the first real-time system to jointly detect human body, hand and facial keypoints (in total 130 keypoints) on single images. In addition, the system computational performance on body keypoint estimation is invariant to the number of detected people in the image.
+    OpenPose represents the first real-time system to jointly detect human body, hand and facial keypoints (in total
+    130 keypoints) on single images. In addition, the system computational performance on body keypoint estimation
+    is invariant to the number of detected people in the image.
 
-The published article by its authors is at:
+The article published by its authors is at:
 
        Realtime Multi-Person 2D Pose Estimation using Part Affinity Fields
           at https://arxiv.org/abs/1611.08050
