@@ -27,5 +27,5 @@ The first example is from a scene of the movie ["Back Stage", starring Fatty Arb
 
 [![result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi](extras/result_combined_1919_Arbuckle_Buster_Keaton_Back_Stage_frame_000513.png)](result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi)
 
-(The background used in this translation to receive the scene is at [https://commons.wikimedia.org/wiki/File:Dance_Studio_First.jpg](https://commons.wikimedia.org/wiki/File:Dance_Studio_First.jpg).)
+(The background used in this translation to receive the scene is at [https://commons.wikimedia.org/wiki/File:Dance_Studio_First.jpg](https://commons.wikimedia.org/wiki/File:Dance_Studio_First.jpg), although any other adequate background could have been chosen -giving, probably, a very different translation of the scene.)
 
