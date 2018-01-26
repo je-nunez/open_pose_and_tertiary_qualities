@@ -25,7 +25,7 @@ This project is using this library for tertiary artistic qualities, mainly simpl
 
 The first example is from a scene of the movie ["Back Stage", starring Fatty Arbuckle and Buster Keaton (1919)](https://en.wikipedia.org/wiki/Back_Stage_(1919_film)), when the dancer Jack Coogan enters into the theater and Buster Keaton, Al St. John, and Roscoe Arbuckle meet him. The original scene is at [https://www.youtube.com/watch?v=tYL0VjaCAUY](https://www.youtube.com/watch?v=tYL0VjaCAUY). One result, by using Open-Pose to find Tertiary artistic qualities, is at [result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi](result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi), where it can be seen that the qualities of time and location in the original scene are translated.
 
-[![result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi](extras/result_combined_1919_Arbuckle_Buster_Keaton_Back_Stage_frame_000513.png)](result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi)
+[![result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi](extras/result_combined_1919_Arbuckle_Buster_Keaton_Back_Stage_frame_000231.png)](result_1919_Arbuckle_Buster_Keaton_Back_Stage.avi)
 
 (The background used in this translation to receive the scene is at [https://commons.wikimedia.org/wiki/File:Dance_Studio_First.jpg](https://commons.wikimedia.org/wiki/File:Dance_Studio_First.jpg), although any other adequate background could have been chosen -giving, probably, a very different translation of the scene. Furthermore, this scene has two other minor backgrounds -one were Buster Keaton and Al St. John talk and dance, and another where Roscoe Arbuckle dances: these two other backgrounds where to translate these subscenes need to be found.)
 
